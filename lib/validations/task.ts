@@ -13,11 +13,9 @@ export const createTaskSchema = z.object({
     .transform((val) => (val?.trim() === "" ? undefined : val?.trim())),
   priority: z
     .enum(["low", "medium", "high"])
-    .optional()
     .default("medium"),
   status: z
     .enum(["To Do", "In Progress", "Done"])
-    .optional()
     .default("To Do"),
   dueDate: z
     .string()
@@ -35,5 +33,6 @@ export const updateTaskSchema = createTaskSchema.partial().refine(
   { message: "At least one field must be updated" }
 );
 
-export type CreateTaskInput = z.infer<typeof createTaskSchema>;
+export type CreateTaskInput = z.input<typeof createTaskSchema>;
+export type CreateTaskOutput = z.output<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;

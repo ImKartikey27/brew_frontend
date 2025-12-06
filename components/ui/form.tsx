@@ -27,28 +27,18 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue
 );
 
-type FormFieldProps<
+const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = ControllerProps<TFieldValues, TName>;
-
-const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
-  function FormFieldComponent({ ...props }, ref) {
-    return (
-      <Controller
-        {...props}
-        render={({ field, fieldState }) => (
-          <FormFieldContext.Provider value={{ name: field.name }}>
-            <div ref={ref}>{props.render?.({ field, fieldState })}</div>
-          </FormFieldContext.Provider>
-        )}
-      />
-    );
-  }
-) as React.ForwardRefExoticComponent<FormFieldProps> & {
-  propTypes?: any;
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  );
 };
-FormField.displayName = "FormField";
 
 const useFormField = (): {
   id?: string;

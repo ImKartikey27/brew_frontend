@@ -1,14 +1,19 @@
 /**
  * Highlight matching text in a string
- * Returns JSX-compatible array with highlighted parts
+ * Returns array with highlighted parts
  */
-export function getHighlightedMatches(text: string, query: string) {
-  if (!query.trim()) return text;
+export function getHighlightedMatches(
+  text: string,
+  query: string
+): { text: string; isMatch: boolean; key: number }[] {
+  if (!query.trim()) {
+    return [{ text, isMatch: false, key: 0 }];
+  }
 
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
   return text.split(regex).map((part, index) => ({
     text: part,
-    isMatch: regex.test(part),
+    isMatch: part.toLowerCase() === query.toLowerCase(),
     key: index,
   }));
 }
