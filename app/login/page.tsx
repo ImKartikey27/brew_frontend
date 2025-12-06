@@ -93,7 +93,7 @@ export default function LoginPage(): React.ReactElement {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 px-4 py-12 transition-colors duration-200">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 px-4 py-12 transition-colors duration-200">
       <div className="absolute top-4 right-4">
         <Button
           variant="ghost"
