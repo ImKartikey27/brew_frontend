@@ -3,11 +3,36 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
-  // For cross-domain auth, we can't rely on httpOnly cookies in middleware
-  // The actual auth check happens client-side via the /auth/me endpoint
-  // Middleware just handles basic routing, not auth protection
-  
-  // Let all routes through - auth protection is handled client-side
+  // Check if user has auth token (we'll check cookies)
+  const hasAuthToken = request.cookies.has("accessToken");
+
+  // Routes that require authentication
+  const protectedRoutes = ["/dashboard"];
+
+  // Routes that should redirect to dashboard if authenticated
+  const authRoutes = ["/login", "/register"];
+
+  // Redirect root to login or dashboard based on auth
+  if (pathname === "/") {
+    return NextResponse.redirect(
+      new URL(hasAuthToken ? "/dashboard" : "/login", request.url)
+    );
+  }
+
+  // If trying to access protected route without auth token
+  if (protectedRoutes.some((route) => pathname.startsWith(route))) {
+    if (!hasAuthToken) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  // If trying to access auth routes while authenticated
+  if (authRoutes.some((route) => pathname.startsWith(route))) {
+    if (hasAuthToken) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 

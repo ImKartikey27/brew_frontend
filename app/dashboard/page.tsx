@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Task, Priority, Status } from "@/types";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -19,18 +18,10 @@ import { Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { useKeyboardShortcuts } from "@/lib/hooks/useKeyboardShortcuts";
 
 export default function DashboardPage(): React.ReactElement {
-  const router = useRouter();
-  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPriority, setSelectedPriority] = useState<Priority | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<Status | undefined>();
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isAuthLoading && !isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isAuthLoading, isAuthenticated, router]);
 
   // Dialog states
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
@@ -145,24 +136,6 @@ export default function DashboardPage(): React.ReactElement {
         error instanceof Error ? error.message : "Failed to update status";
       toast.error(errorMessage);
     }
-  }
-
-  // Show loading while checking auth
-  if (isAuthLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 dark:border-slate-100"></div>
-      </div>
-    );
-  }
-
-  // Don't render if not authenticated (will redirect)
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 dark:border-slate-100"></div>
-      </div>
-    );
   }
 
   return (
