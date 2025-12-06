@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://92.118.206.172:8443/api/v1",
+  baseURL: "https://brew-a1kq.onrender.com/api.v1",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
