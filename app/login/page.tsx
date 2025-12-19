@@ -81,10 +81,7 @@ export default function LoginPage(): React.ReactElement {
     try {
       await login(values.email, values.password);
       toast.success("Logged in successfully");
-      // Small delay to ensure state updates and cookies are set
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500);
+      // Navigation will be handled by the useEffect that watches isAuthenticated
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Login failed";

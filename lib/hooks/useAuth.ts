@@ -32,19 +32,14 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authApi.login(email, password),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response.success && response.data) {
+        // Invalidate and refetch the user query to sync with backend
+        await queryClient.invalidateQueries({ queryKey: ["auth", "user"] });
         setIsAuthenticated(true);
-        queryClient.setQueryData(["auth", "user"], {
-          _id: response.data.id,
-          name: response.data.name,
-          email: response.data.email,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
       }
     },
-    onError: (error) => {
+    onError: () => {
       setIsAuthenticated(false);
     },
   });
